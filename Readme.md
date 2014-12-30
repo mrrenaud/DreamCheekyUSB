@@ -4,7 +4,7 @@
 
 -------------
 
-**DreamCheekyUSB* provides .NET drivers for the **Dream Cheeky Webmail Notifier** (http://www.dreamcheeky.com/webmail-notifier) and the **Dream Cheeky Big Red Button** (http://dreamcheeky.com/big-red-button).
+**DreamCheekyUSB** provides .NET drivers for the **Dream Cheeky Webmail Notifier** (http://www.dreamcheeky.com/webmail-notifier) and the **Dream Cheeky Big Red Button** (http://dreamcheeky.com/big-red-button).
 
 It was created using the https://github.com/mikeobrien/HidLibrary/ and is released under the Apache License V2.0.
 
