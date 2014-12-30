@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace DreamCheekyUSB
 {
-    public class DreamCheekyBTN 
+    public class DreamCheekyBTN
     {
         #region Constant and readonly values
         public HidLibrary.HidDevice hidBTN;
         public const int DefaultVendorID = 0x1D34;  //Default Vendor ID for Dream Cheeky devices
-        public const int DefaultProductID = 0x0008; //Default for Ironman USB stress button
+        public const int DefaultProductID = 0x0000; //Default for Big Red Button button
         //Initialization values and test colors
         public static readonly byte[] cmd_status = new byte[9] { 0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 };
         #endregion
@@ -35,12 +35,12 @@ namespace DreamCheekyUSB
         /// <param name="VendorID">Example to 0x1D34</param>
         /// <param name="ProductID">Example to 0x0008</param>
         /// <param name="DeviceIndex">Zero based device index if you have multiple devices plugged in.</param>
-        public DreamCheekyBTN(int VendorID, int ProductID, int DeviceIndex=0)
+        public DreamCheekyBTN(int VendorID, int ProductID, int DeviceIndex = 0)
         {
             var devices = HidLibrary.HidDevices.Enumerate(VendorID, ProductID);
             if (DeviceIndex >= devices.Count())
             {
-                throw new ArgumentOutOfRangeException("DeviceIndex",String.Format("DeviceIndex={0} is invalid. There are only {1} devices connected.", DeviceIndex,devices.Count()));
+                throw new ArgumentOutOfRangeException("DeviceIndex", String.Format("DeviceIndex={0} is invalid. There are only {1} devices connected.", DeviceIndex, devices.Count()));
             }
             hidBTN = devices.Skip(DeviceIndex).FirstOrDefault<HidLibrary.HidDevice>();
             if (!init())
@@ -99,7 +99,7 @@ namespace DreamCheekyUSB
         public bool ButtonState { get; private set; }
 
         public bool Write(byte[] data)
-        {   
+        {
             //Trace.WriteLine("\r\nWriteing Data=" + BitConverter.ToString(data));
             hidBTN.Write(data, SignalWrite);
             this.WriteEvent.WaitOne();
@@ -122,16 +122,18 @@ namespace DreamCheekyUSB
             return hidBTN.Read();
         }
 
-        public bool GetStatus() {
+        public bool GetStatus()
+        {
             if (Write(cmd_status))
             {
                 var data = Read();
-                if (data.Data[1] == 0x1C)
+                if (data.Data[1] == 0x16) // button is active
                 {
                     return true;
                 }
                 else
                 {
+                    // data.Data[1] == 0x16 // button is inactive
                     return false;
                 }
             }

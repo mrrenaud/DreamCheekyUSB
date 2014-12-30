@@ -1,5 +1,10 @@
-DreamCheekyUSB provides .NET drivers for the Dream Cheeky Webmail Notifier (http://www.dreamcheeky.com/webmail-notifier) 
-and the Dream Cheeky Iron Man USB Stress Button (http://www.amazon.com/Iron-Mann-USB-Power-Button/dp/B0041HQQVA)
+# DreamCheekyUSB for Big Red Button
+
+This repo is forked from [DreamCheekyUSB on CodePlex](https://dreamcheekyusb.codeplex.com/) which was originaly working with the Dream Cheeky Iron Man USB Stress Button.
+
+-------------
+
+DreamCheekyUSB provides .NET drivers for the Dream Cheeky Webmail Notifier (http://www.dreamcheeky.com/webmail-notifier) and the Big Red Button (http://dreamcheeky.com/big-red-button).
 
 It was created using the https://github.com/mikeobrien/HidLibrary/ and is released under the Apache License V2.0
 
