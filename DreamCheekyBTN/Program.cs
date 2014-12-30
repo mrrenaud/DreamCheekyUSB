@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Diagnostics;
+using DreamCheeky.Devices;
 
-namespace DreamCheekyUSB
+namespace DreamCheekyBTN
 {
     class Program
     {
-        static string strCMD = "";
-        static string strCMDARGs = "";
-        static string strMacro = "";
-        static int count = 0;
+        static string _strCmd = "";
+        static string _strCmdarGs = "";
+        static string _strMacro = "";
+        static int _count = 0;
         static void Main(string[] args)
         {
             int actions = 0;
-            DreamCheekyBTN btn = null;
+            BigRedButton btn = null;
             try
             {
                 if (args.ContainsInsensitive("debug"))
@@ -27,7 +27,7 @@ namespace DreamCheekyUSB
                 if (string.IsNullOrEmpty(devicearg))
                 {
                     Console.WriteLine("\r\nConnecting to DreamCheekyBTN using default values...");
-                    btn = new DreamCheekyBTN();
+                    btn = new BigRedButton();
                 }
                 else
                 {
@@ -35,7 +35,7 @@ namespace DreamCheekyUSB
                     string[] deviceSplit = devicearg.Substring(7).Split(',');
                     if (deviceSplit.Length == 1)
                     {
-                        btn = new DreamCheekyBTN(deviceSplit[0]); //One argument = device path
+                        btn = new BigRedButton(deviceSplit[0]); //One argument = device path
                     }
                     else
                     {
@@ -46,10 +46,10 @@ namespace DreamCheekyUSB
                             devicecount = int.Parse(deviceSplit[2]);
                         }
 
-                        int VID = int.Parse(deviceSplit[0].Substring(2), System.Globalization.NumberStyles.HexNumber);
-                        int PID = int.Parse(deviceSplit[1].Substring(2), System.Globalization.NumberStyles.HexNumber);
+                        int vid = int.Parse(deviceSplit[0].Substring(2), System.Globalization.NumberStyles.HexNumber);
+                        int pid = int.Parse(deviceSplit[1].Substring(2), System.Globalization.NumberStyles.HexNumber);
 
-                        btn = new DreamCheekyBTN(VID, PID, devicecount);
+                        btn = new BigRedButton(vid, pid, devicecount);
                     }
                 }
 
@@ -57,15 +57,15 @@ namespace DreamCheekyUSB
                 if (!string.IsNullOrEmpty(cmdarg))
                 {
                     actions++;
-                    strCMD = cmdarg.Substring(4);
-                    Console.WriteLine("Setting command to: " + strCMD);
+                    _strCmd = cmdarg.Substring(4);
+                    Console.WriteLine("Setting command to: " + _strCmd);
                 }
 
                 string argarg = args.StartsWith("ARG=").FirstOrDefault();
                 if (!string.IsNullOrEmpty(argarg))
                 {
-                    strCMDARGs = argarg.Substring(4);
-                    Console.WriteLine("Setting command arguments to: " + strCMDARGs);
+                    _strCmdarGs = argarg.Substring(4);
+                    Console.WriteLine("Setting command arguments to: " + _strCmdarGs);
                 }
 
                 string macroarg = args.StartsWith("MACRO=").FirstOrDefault();
@@ -73,16 +73,16 @@ namespace DreamCheekyUSB
                 {
                     actions++;
                     string[] macosplit = macroarg.Split('=');
-                    strMacro = macosplit[1];
-                    Console.WriteLine("Setting Macro to: " + strMacro);
+                    _strMacro = macosplit[1];
+                    Console.WriteLine("Setting Macro to: " + _strMacro);
                 }
 
-                if (actions > 0)
-                {
-                    btn.RegisterCallback(DoAction);
-                    Console.WriteLine("Listening for button press events. Press any key to escape...");
-                    Console.ReadKey(true);
-                }
+                //if (actions > 0)
+                //{
+                btn.RegisterCallback(DoAction);
+                Console.WriteLine("Listening for button press events. Press any key to escape...");
+                Console.ReadKey(true);
+                //}
             }
             catch (Exception ex)
             {
@@ -113,9 +113,9 @@ namespace DreamCheekyUSB
                 Console.WriteLine(@"  DreamCheekyBTN.exe CMD=powershell ARG=""-noexit -executionpolicy unrestricted -File c:\test.ps1""");
 
                 Console.WriteLine("\r\n\r\nDevice Path:");
-                Console.WriteLine("  Optional, Defaults to first USB device with VID=0x1D34 and PID=0x0008");
-                Console.WriteLine("  Example (VID,PID,Index): device=\"0x1D34,0x0008,0\"");
-                Console.WriteLine("  Example (Path): device=" + @"""\\?\hid#vid_1d34&pid_0008#6&1067c3dc&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}""");
+                Console.WriteLine("  Optional, Defaults to first USB device with VID=0x1D34 and PID=0x000d");
+                Console.WriteLine("  Example (VID,PID,Index): device=\"0x1D34,0x000d,0\"");
+                Console.WriteLine("  Example (Path): device=" + @"""\\?\hid#vid_1d34&pid_000d#6&1067c3dc&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}""");
 
                 Console.WriteLine("\r\nOptions:");
                 Console.WriteLine("  debug = Print trace statements to Console.Out");
@@ -145,25 +145,25 @@ namespace DreamCheekyUSB
 
         static void DoAction()
         {
-            count++;
-            Console.WriteLine("\r\n{0}: Detected button press event. Count={1}", DateTime.Now.ToLongTimeString(), count);
-            if (!string.IsNullOrEmpty(strCMD))
+            _count++;
+            Console.WriteLine("\r\n{0}: Detected button press event. Count={1}", DateTime.Now.ToLongTimeString(), _count);
+            if (!string.IsNullOrEmpty(_strCmd))
             {
                 try
                 {
-                    Process.Start(strCMD, strCMDARGs);
+                    Process.Start(_strCmd, _strCmdarGs);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error: " + ex.Message);
                 }
             }
-            if (!string.IsNullOrEmpty(strMacro))
+            if (!string.IsNullOrEmpty(_strMacro))
             {
                 try
                 {
-                    Console.WriteLine("Sending keys: " + strMacro);
-                    System.Windows.Forms.SendKeys.SendWait(strMacro);
+                    Console.WriteLine("Sending keys: " + _strMacro);
+                    System.Windows.Forms.SendKeys.SendWait(_strMacro);
                 }
                 catch (Exception ex)
                 {
@@ -179,15 +179,15 @@ namespace DreamCheekyUSB
     /// </summary>
     public static class StringArrayExtenstions
     {
-        public static bool ContainsInsensitive(this string[] args, string Name)
+        public static bool ContainsInsensitive(this string[] args, string name)
         {
-            return args.Contains(Name, StringComparer.CurrentCultureIgnoreCase);
+            return args.Contains(name, StringComparer.CurrentCultureIgnoreCase);
         }
 
-        public static IEnumerable<string> StartsWith(this string[] args, string Value, StringComparison options = StringComparison.CurrentCultureIgnoreCase)
+        public static IEnumerable<string> StartsWith(this string[] args, string value, StringComparison options = StringComparison.CurrentCultureIgnoreCase)
         {
             var q = from a in args
-                    where a.StartsWith(Value, options)
+                    where a.StartsWith(value, options)
                     select a;
             return q;
         }
