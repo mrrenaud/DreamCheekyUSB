@@ -2,6 +2,8 @@
 
 *This repo is forked from [DreamCheekyUSB on CodePlex](https://dreamcheekyusb.codeplex.com/) which was originaly working with the Dream Cheeky Iron Man USB Stress Button.*
 
+This library uses the [HidLibrary](https://github.com/mikeobrien/HidLibrary/) delivered by Nuget. However, if you notice the device isn't responding anymore after pushing the button a few times, you should consider to use the updated version of the [HidLibrary for DreamCheekyUSB](https://github.com/MrRenaud/HidLibrary) that implements a timeout and closes the connection with the device to reopen it at the next read/write attempt. This solves the hanging problem.
+
 -------------
 
 **DreamCheekyUSB** provides .NET drivers for the **Dream Cheeky Webmail Notifier** (http://www.dreamcheeky.com/webmail-notifier) and the **Dream Cheeky Big Red Button** (http://dreamcheeky.com/big-red-button).
